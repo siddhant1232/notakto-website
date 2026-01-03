@@ -18,7 +18,6 @@ import type {
 } from "@/services/types";
 import { NormalizeApiError } from "@/utils/apiError";
 
-
 const API_BASE = "/api/game";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 

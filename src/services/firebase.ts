@@ -8,7 +8,7 @@ import {
 	type User,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { NormalizeApiError, type ApiError } from "@/utils/apiError";
+import { type ApiError, NormalizeApiError } from "@/utils/apiError";
 
 const firebaseConfig = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -25,11 +25,7 @@ const auth = getAuth(app);
 export const firestore = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
-export type AuthResult = 
-	| {success:true; user:User}
-	| ApiError;
-
-
+export type AuthResult = { success: true; user: User } | ApiError;
 
 export const signInWithGoogle = async (): Promise<AuthResult> => {
 	try {
@@ -40,7 +36,7 @@ export const signInWithGoogle = async (): Promise<AuthResult> => {
 	}
 };
 
-export const signOutUser = async (): Promise<{success:true} | ApiError> => {
+export const signOutUser = async (): Promise<{ success: true } | ApiError> => {
 	try {
 		await signOut(auth);
 		return { success: true };
