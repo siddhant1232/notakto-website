@@ -1,4 +1,4 @@
-import { ZodError, z } from "zod";
+import { ZodError } from "zod";
 import {
 	CreateGameResponseSchema,
 	type SignInResponse,

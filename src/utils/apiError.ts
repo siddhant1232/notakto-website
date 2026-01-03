@@ -1,5 +1,3 @@
-import { success } from "zod";
-
 export type ApiError = {
 	success: false;
 	error: string;
