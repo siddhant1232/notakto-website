@@ -42,19 +42,29 @@ const Menu = () => {
 	const handleSignIn = async () => {
 		try {
 			// Step 1: Firebase popup
-			const user = await signInWithGoogle();
-			if (!user) throw new Error("No user returned from Google Sign-In");
+			const credential = await signInWithGoogle();
+			if (!credential) {
+				throw new Error("No credential returned from Google Sign-In");
+			}
+
+			// If the sign-in returned a UserCredential it will have a `user` property,
+			// otherwise the returned object might already be a user — guard at runtime.
+			const firebaseUser = (credential as any).user ?? credential;
+			if (!firebaseUser || typeof firebaseUser.getIdToken !== "function") {
+				throw new Error("No Firebase user available to retrieve ID token");
+			}
 
 			// Step 2: Get Firebase ID token
-			const idToken = await user.getIdToken();
+			const idToken = await firebaseUser.getIdToken();
 
 			// Step 3: Call backend sign-in API
 			const backendUser = await signIn(idToken);
 			// TODO: Use these values in the app as needed and delete these console logs
-			console.log("Backend user data:", backendUser);
+			// console.log("Backend user data:", backendUser);
+			// user data should be private
 			console.log("Is New Account:", backendUser.new_account); // returns true if new account
 			// Step 4: Update global user state (TODO)
-			setUser(user);
+			setUser(firebaseUser);
 			setName(backendUser.name);
 			setEmail(backendUser.email);
 			setPic(backendUser.profile_pic);
@@ -62,7 +72,13 @@ const Menu = () => {
 			toast.dismiss(TOAST_IDS.User.SignInError);
 			resetCooldown();
 		} catch (error) {
-			console.error("Sign in error:", error);
+			if (canShowToast()) {
+				toast("Sign in failed. Please try again.", {
+					toastId: TOAST_IDS.User.SignInError,
+					autoClose: TOAST_DURATION,
+					onClose: resetCooldown,
+				});
+			}
 		}
 	};
 
@@ -71,7 +87,13 @@ const Menu = () => {
 			await signOutUser();
 			setUser(null);
 		} catch (error) {
-			console.error("Sign out error:", error);
+			if (canShowToast()) {
+				toast("Sign out failed. Please try again.", {
+					toastId: TOAST_IDS.User.SignInError,
+					autoClose: TOAST_DURATION,
+					onClose: resetCooldown,
+				});
+			}
 		}
 	};
 
@@ -81,7 +103,7 @@ const Menu = () => {
 				toast("Please sign in!", {
 					toastId: TOAST_IDS.User.SignInError,
 					autoClose: TOAST_DURATION,
-					onClose: resetCooldown, // reset cooldown immediately when closed
+					onClose: resetCooldown,
 				});
 			}
 			return;
