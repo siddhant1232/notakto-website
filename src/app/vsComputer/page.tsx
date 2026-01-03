@@ -373,7 +373,6 @@ const Game = () => {
 			}
 		} catch (error) {
 			toast.error("Error updating config");
-
 		} finally {
 			setIsUpdatingConfig(false);
 		}
@@ -399,10 +398,8 @@ const Game = () => {
 					setGameHistory(data.gameState.gameHistory);
 				} else if ("error" in data) {
 					toast.error(data.error || "Failed to update difficulty");
-
 				} else {
 					toast.error("Unexpected response from server");
-
 				}
 			} else {
 				toast.error("User not authenticated");
@@ -410,7 +407,6 @@ const Game = () => {
 			}
 		} catch (error) {
 			toast.error(`Error updating difficulty: ${error}`);
-
 		} finally {
 			setIsUpdatingDifficulty(false);
 		}
