@@ -85,7 +85,7 @@ const Menu = () => {
 		if ((mode === "liveMatch" || mode === "vsComputer") && !user) {
 			if (canShowToast()) {
 				toast("Please sign in!", {
-					toastId: TOAST_IDS.User.SignInError,
+					toastId: TOAST_IDS.User.AuthRequired,
 					autoClose: TOAST_DURATION,
 					onClose: resetCooldown,
 				});
