@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { TOAST_DURATION, TOAST_IDS } from "@/constants/toast";
+import LogRocket from "logrocket";
 
 export const handleBuyCoins = async (
 	setIsProcessingPayment: (val: boolean) => void,
@@ -111,9 +112,14 @@ export const checkPaymentStatus = async (
 				paymentWindow?.close();
 				onFailure("Payment expired or failed.");
 			}
-		} catch {
+		} catch (errer) {
+			LogRocket.captureException(
+				errer instanceof Error ? errer : new Error(String(errer)),
+			);
+
 			clearInterval(intervalId);
 			paymentWindow?.close();
+
 			onFailure("Unable to verify payment status. Please try again.");
 		}
 	}, 3000);
