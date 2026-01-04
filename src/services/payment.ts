@@ -1,6 +1,6 @@
+import LogRocket from "logrocket";
 import { toast } from "react-toastify";
 import { TOAST_DURATION, TOAST_IDS } from "@/constants/toast";
-import LogRocket from "logrocket";
 
 export const handleBuyCoins = async (
 	setIsProcessingPayment: (val: boolean) => void,
